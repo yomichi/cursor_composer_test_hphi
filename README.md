@@ -16,7 +16,9 @@ A set of Python scripts to analyze energy gaps from HPhi calculation results. Th
 ### Physical Model
 The scripts analyze the spin-$S$ antiferromagnetic XXZ chain:
 
-$H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]$
+$$
+H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]
+$$
 
 where:
 - $J > 0$: Antiferromagnetic coupling (fixed to 1)
@@ -94,7 +96,9 @@ HPhi計算結果からエネルギーギャップを解析するためのPython�
 ### 物理模型
 スピン$S$の反強磁性XXZ鎖を解析します：
 
-$H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]$
+$$
+H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]
+$$
 
 ここで：
 - $J > 0$：反強磁性相互作用（1に固定）
