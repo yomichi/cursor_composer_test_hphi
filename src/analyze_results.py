@@ -25,7 +25,7 @@ def parse_args(args=None):
         If the specified work directory does not exist
     """
     parser = argparse.ArgumentParser(description='Analyze HPhi energy results')
-    parser.add_argument('work_dir', nargs='?', default='.',
+    parser.add_argument('--work-dir', default='.',
                        help='Working directory containing results')
     
     parsed_args = parser.parse_args(args)

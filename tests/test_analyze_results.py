@@ -139,7 +139,7 @@ def test_main(temp_workdir, sample_energy_data):
         energy_file.parent.mkdir(parents=True, exist_ok=True)
         energy_file.write_text(sample_energy_data)
     
-    main([str(temp_workdir)])
+    main(["--work-dir", str(temp_workdir)])
     
     assert (temp_workdir / "energy_gap.dat").exists()
     assert (temp_workdir / "energy_gap.png").exists() 
