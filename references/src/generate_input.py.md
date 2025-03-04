@@ -3,9 +3,8 @@
 反強磁性XXZ模型の入力ファイルを生成するスクリプト
 
 ## 機能
-- 指定されたサイズのスピン鎖に対するHPhiの入力ファイルを生成（スタンダードモード用）
+- 指定されたサイズのスピン鎖に対するHPhiの入力ファイル（StdFace.def）を生成
 - 各サイズごとに専用のディレクトリを作成
-- `StdFace.def`と`hamiltonian.def`を生成
 
 ## コマンドラインオプション
 ```
@@ -19,31 +18,21 @@
 
 ### StdFace.def
 ```
-model = "SpinGC"      # SpinGCモデル（一般化スピン）
-method = "CG"         # 共役勾配法
+model = "SpinGC"
+method = "CG"
 lattice = "chain lattice"
 L = {size}
 2S = {2s}
 J = 1.0
-2Sz = 0              # 全スピンのz成分
-nelec = {nelec}      # 粒子数（2S*L/2に設定）
-```
-
-### hamiltonian.def
-```
-======================
-NInteraction {N_int}
-======================
-========i_j_s_tilde====
-======================
-{interactions}
-======================
-```
-ここで`interactions`は以下の形式の行を含む：
-```
-i j 1 1.0  # Sx_i Sx_j
-i j 2 1.0  # Sy_i Sy_j
-i j 3 {delta}  # Sz_i Sz_j
+2Sz = 0
+nelec = {nelec}
+Lanczos_max = 2000
+CDataFileHead = "zvo"
+Sz = 0
+NSPGaussVec = 1
+NOmega = 5
+CG_maxIter = 2000
+CG_eps = 1e-10
 ```
 
 ## 出力ディレクトリ構造
@@ -51,11 +40,9 @@ i j 3 {delta}  # Sz_i Sz_j
 {work_dir}/
 └── data/
     ├── N4/
-    │   ├── StdFace.def
-    │   └── hamiltonian.def
+    │   └── StdFace.def
     ├── N6/
-    │   ├── StdFace.def
-    │   └── hamiltonian.def
+    │   └── StdFace.def
     └── ...
 ```
 
