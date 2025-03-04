@@ -32,6 +32,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--2s",
+        dest="two_s",
         type=int,
         default=1,
         help="Value of 2S (default: 1)",
