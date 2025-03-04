@@ -9,6 +9,30 @@ A set of Python scripts to analyze energy gaps from HPhi calculation results. Th
 2. Run HPhi calculations for different system sizes
 3. Analyze energy gaps and perform finite-size scaling
 
+### Physical Model
+The scripts analyze the spin-\(S\) antiferromagnetic Heisenberg chain with single-ion anisotropy:
+
+\[
+H = J\sum_{i=1}^N \mathbf{S}_i \cdot \mathbf{S}_{i+1} + D\sum_{i=1}^N (S_i^z)^2
+\]
+
+where:
+- \(J > 0\): Antiferromagnetic coupling (fixed to 1)
+- \(D\): Single-ion anisotropy (specified by `--delta` option)
+- \(S\): Spin magnitude (specified by `--2S` option as \(2S\))
+- \(N\): System size (specified by `--sizes` option)
+
+### Observables
+The scripts calculate:
+1. Ground state energy \(E_0\)
+2. First excited state energy \(E_1\)
+3. Energy gap \(\Delta = E_1 - E_0\)
+4. Finite-size scaling of the gap:
+   \[
+   \Delta(N) = \Delta_\infty + \frac{a}{N} + O(N^{-2})
+   \]
+   where \(\Delta_\infty\) is the gap in the thermodynamic limit.
+
 ## Directory Structure
 ```
 .
@@ -65,49 +89,29 @@ HPhi計算結果からエネルギーギャップを解析するためのPython�
 2. 異なるシステムサイズでのHPhi計算の実行
 3. エネルギーギャップの解析と有限サイズスケーリング
 
+### 物理模型
+スピン\(S\)の反強磁性ハイゼンベルグ鎖に一軸異方性を加えた模型を解析します：
+
+\[
+H = J\sum_{i=1}^N \mathbf{S}_i \cdot \mathbf{S}_{i+1} + D\sum_{i=1}^N (S_i^z)^2
+\]
+
+ここで：
+- \(J > 0\)：反強磁性相互作用（1に固定）
+- \(D\)：一軸異方性（`--delta`オプションで指定）
+- \(S\)：スピンの大きさ（`--2S`オプションで\(2S\)として指定）
+- \(N\)：システムサイズ（`--sizes`オプションで指定）
+
+### 計算する物理量
+以下の物理量を計算します：
+1. 基底状態エネルギー \(E_0\)
+2. 第一励起状態エネルギー \(E_1\)
+3. エネルギーギャップ \(\Delta = E_1 - E_0\)
+4. ギャップの有限サイズスケーリング：
+   \[
+   \Delta(N) = \Delta_\infty + \frac{a}{N} + O(N^{-2})
+   \]
+   ここで\(\Delta_\infty\)は熱力学極限でのギャップ。
+
 ## ディレクトリ構成
 ```
-.
-├── src/
-│   ├── generate_input.py    # HPhi入力ファイル生成
-│   ├── run_calculations.py  # HPhi計算実行
-│   └── analyze_results.py   # エネルギーギャップ解析
-├── tests/                   # テストファイル
-├── data/                    # 入力データディレクトリ（generate_input.pyにより作成）
-└── results/                 # 結果ディレクトリ
-    └── raw/                # 生の計算結果
-```
-
-## 実行に必要な準備
-- Python 3.8以降
-- 必要なPythonパッケージ：
-  ```
-  numpy>=1.24.0
-  matplotlib>=3.7.0
-  pytest>=7.3.1  # テスト実行用
-  ```
-- HPhi（コンパイル済みでPATHが通っていること）
-
-## 実行手順
-
-### 1. 入力ファイルの生成
-```bash
-python src/generate_input.py [オプション]
-  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
-  --2S VALUE        2Sの値（デフォルト：1）
-  --delta VALUE     Δの値（デフォルト：1.0）
-  --sizes LIST      システムサイズのカンマ区切りリスト（デフォルト：4,6,8,10,12）
-```
-
-### 2. 計算の実行
-```bash
-python src/run_calculations.py [オプション]
-  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
-```
-
-### 3. 結果の解析
-```bash
-python src/analyze_results.py [オプション]
-  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
-  --format FORMAT   プロット出力形式：pdf、png、または pdf,png（デフォルト：pdf）
-``` 
