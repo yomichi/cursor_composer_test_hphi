@@ -1,11 +1,12 @@
 ---
-description: python codes
+description: Use English strings, comments, and docstrings in Python files
 globs: *.py
 alwaysApply: false
 ---
 
 # Your rule content
 
-- 文字列には英語を使う
-- コメントには英語を使う
-- docstringsはNumpy形式にする
+- In Python codes:
+  - Use English for comments
+  - Use English for strings
+  - Use NumPy style docstrings

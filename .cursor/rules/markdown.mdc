@@ -1,0 +1,12 @@
+---
+description: write markdown texts in Japanese
+globs: *.md
+alwaysApply: false
+---
+
+# Your rule content
+
+- In Markdown files:
+  - Use Japanese
+  - Follow Markdown lint rules
+    - https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
