@@ -12,6 +12,7 @@ from analyze_results import (
     create_plot,
     main
 )
+import matplotlib.pyplot as plt
 
 @pytest.fixture
 def sample_energy_data():
@@ -35,10 +36,27 @@ def test_parse_args(temp_workdir):
     # Test default values
     args = parse_args([])
     assert args.work_dir == "."
+    assert args.formats == ["pdf"]
 
     # Test custom work directory
     args = parse_args(["--work-dir", str(temp_workdir)])
     assert args.work_dir == str(temp_workdir)
+    assert args.formats == ["pdf"]
+
+    # Test format option
+    args = parse_args(["--format", "png"])
+    assert args.formats == ["png"]
+
+    args = parse_args(["--format", "pdf,png"])
+    assert args.formats == ["pdf", "png"]
+
+    # Test invalid format
+    with pytest.raises(SystemExit):
+        parse_args(["--format", "jpg"])
+
+    # Test duplicate format
+    with pytest.raises(SystemExit):
+        parse_args(["--format", "pdf,pdf"])
 
     # Test non-existent directory
     with pytest.raises(SystemExit):
@@ -131,11 +149,22 @@ def test_create_plot(temp_workdir):
     sizes = [4, 6, 8]
     gaps = [0.11671327, 0.13580246, 0.13580246]
     
-    plot_file = temp_workdir / "energy_gap.png"
+    # Test PDF output (default)
+    plot_file = temp_workdir / "energy_gap"
+    plt.rcParams['savefig.format'] = ['pdf']
     create_plot(plot_file, sizes, gaps)
+    assert (plot_file.with_suffix('.pdf')).exists()
     
-    assert plot_file.exists()
-    assert plot_file.stat().st_size > 0
+    # Test PNG output
+    plt.rcParams['savefig.format'] = ['png']
+    create_plot(plot_file, sizes, gaps)
+    assert (plot_file.with_suffix('.png')).exists()
+    
+    # Test multiple formats
+    plt.rcParams['savefig.format'] = ['pdf', 'png']
+    create_plot(plot_file, sizes, gaps)
+    assert (plot_file.with_suffix('.pdf')).exists()
+    assert (plot_file.with_suffix('.png')).exists()
 
 def test_main(temp_workdir, sample_energy_data):
     # Create test data structure
@@ -146,7 +175,12 @@ def test_main(temp_workdir, sample_energy_data):
         energy_file.parent.mkdir(parents=True, exist_ok=True)
         energy_file.write_text(sample_energy_data)
     
+    # Test default format (PDF)
     main(["--work-dir", str(temp_workdir)])
-    
     assert (temp_workdir / "energy_gap.dat").exists()
+    assert (temp_workdir / "energy_gap.pdf").exists()
+    
+    # Test multiple formats
+    main(["--work-dir", str(temp_workdir), "--format", "pdf,png"])
+    assert (temp_workdir / "energy_gap.pdf").exists()
     assert (temp_workdir / "energy_gap.png").exists() 

@@ -22,11 +22,13 @@ def parse_args(args=None):
     Raises
     ------
     SystemExit
-        If the specified work directory does not exist
+        If the specified work directory does not exist or format is invalid
     """
     parser = argparse.ArgumentParser(description='Analyze HPhi energy results')
     parser.add_argument('--work-dir', default='.',
                        help='Working directory containing results')
+    parser.add_argument('--format', default='pdf',
+                       help='Output format(s) for plots (pdf, png, or pdf,png)')
     
     parsed_args = parser.parse_args(args)
     work_dir = Path(parsed_args.work_dir)
@@ -34,6 +36,16 @@ def parse_args(args=None):
     if not work_dir.exists():
         parser.error(f"Directory not found: {work_dir}")
     
+    # Validate format
+    formats = parsed_args.format.split(',')
+    valid_formats = {'pdf', 'png'}
+    invalid_formats = set(formats) - valid_formats
+    if invalid_formats:
+        parser.error(f"Unsupported format(s): {','.join(invalid_formats)}")
+    if len(formats) != len(set(formats)):
+        parser.error("Duplicate formats specified")
+    
+    parsed_args.formats = formats
     return parsed_args
 
 def find_result_dirs(work_dir):
@@ -173,7 +185,7 @@ def create_plot(output_file, sizes, gaps):
     Parameters
     ----------
     output_file : Path
-        Output file path for the plot
+        Output file path for the plot (without extension)
     sizes : list
         List of system sizes
     gaps : list
@@ -212,7 +224,9 @@ def create_plot(output_file, sizes, gaps):
     # Adjust x-axis to show the origin
     plt.xlim(-0.01, max(x) * 1.1)
     
-    plt.savefig(output_file)
+    # Save plot in specified formats
+    for fmt in plt.rcParams['savefig.format']:
+        plt.savefig(f"{output_file}.{fmt}")
     plt.close()
 
 def main(argv=None):
@@ -225,6 +239,9 @@ def main(argv=None):
     """
     args = parse_args(argv)
     work_dir = Path(args.work_dir)
+
+    # Set plot formats
+    plt.rcParams['savefig.format'] = args.formats
 
     # Find result directories and extract system sizes
     result_dirs = find_result_dirs(work_dir)
@@ -241,7 +258,7 @@ def main(argv=None):
     # Calculate gaps and create outputs
     gaps = calculate_gaps(sizes, e0s, e1s)
     write_gap_data(work_dir / "energy_gap.dat", sizes, e0s, e1s, gaps)
-    create_plot(work_dir / "energy_gap.png", sizes, gaps)
+    create_plot(work_dir / "energy_gap", sizes, gaps)
 
 if __name__ == "__main__":
     main() 
