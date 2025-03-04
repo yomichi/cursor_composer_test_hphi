@@ -14,28 +14,26 @@ A set of Python scripts to analyze energy gaps from HPhi calculation results. Th
 3. Analyze energy gaps and perform finite-size scaling
 
 ### Physical Model
-The scripts analyze the spin-\(S\) antiferromagnetic XXZ chain:
+The scripts analyze the spin-$S$ antiferromagnetic XXZ chain:
 
-\[
-H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]
-\]
+$H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]$
 
 where:
-- \(J > 0\): Antiferromagnetic coupling (fixed to 1)
-- \(\Delta\): Ising anisotropy (specified by `--delta` option)
-- \(S\): Spin magnitude (specified by `--2S` option as \(2S\))
-- \(N\): System size (specified by `--sizes` option)
+- $J > 0$: Antiferromagnetic coupling (fixed to 1)
+- $\Delta$: Ising anisotropy (specified by `--delta` option)
+- $S$: Spin magnitude (specified by `--2S` option as $2S$)
+- $N$: System size (specified by `--sizes` option)
 
 ### Observables
 The scripts calculate:
-1. Ground state energy \(E_0\)
-2. First excited state energy \(E_1\)
-3. Energy gap \(\Delta E = E_1 - E_0\)
+1. Ground state energy $E_0$
+2. First excited state energy $E_1$
+3. Energy gap $\Delta E = E_1 - E_0$
 4. Finite-size scaling of the gap:
-   \[
-   \Delta E(N) = \Delta E_\infty + \frac{a}{N} + O(N^{-2})
-   \]
-   where \(\Delta E_\infty\) is the gap in the thermodynamic limit.
+   
+   $\Delta E(N) = \Delta E_\infty + \frac{a}{N} + O(N^{-2})$
+   
+   where $\Delta E_\infty$ is the gap in the thermodynamic limit.
 
 ## Directory Structure
 ```
@@ -94,74 +92,72 @@ HPhi計算結果からエネルギーギャップを解析するためのPython�
 3. エネルギーギャップの解析と有限サイズスケーリング
 
 ### 物理模型
-スピン\(S\)の反強磁性XXZ鎖を解析します：
+スピン$S$の反強磁性XXZ鎖を解析します：
 
-\[
-H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]
-\]
+$H = J\sum_{i=1}^N \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^z S_{i+1}^z \right]$
 
 ここで：
-- \(J > 0\)：反強磁性相互作用（1に固定）
-- \(\Delta\)：イジング異方性（`--delta`オプションで指定）
-- \(S\)：スピンの大きさ（`--2S`オプションで\(2S\)として指定）
-- \(N\)：システムサイズ（`--sizes`オプションで指定）
+- $J > 0$：反強磁性相互作用（1に固定）
+- $\Delta$：イジング異方性（`--delta`オプションで指定）
+- $S$：スピンの大きさ（`--2S`オプションで$2S$として指定）
+- $N$：システムサイズ（`--sizes`オプションで指定）
 
 ### 計算する物理量
 以下の物理量を計算します：
-1. 基底状態エネルギー \(E_0\)
-2. 第一励起状態エネルギー \(E_1\)
-3. エネルギーギャップ \(\Delta E = E_1 - E_0\)
+1. 基底状態エネルギー $E_0$
+2. 第一励起状態エネルギー $E_1$
+3. エネルギーギャップ $\Delta E = E_1 - E_0$
 4. ギャップの有限サイズスケーリング：
-   \[
-   \Delta E(N) = \Delta E_\infty + \frac{a}{N} + O(N^{-2})
-   \]
-   ここで\(\Delta E_\infty\)は熱力学極限でのギャップ。
+   
+   $\Delta E(N) = \Delta E_\infty + \frac{a}{N} + O(N^{-2})$
+   
+   ここで$\Delta E_\infty$は熱力学極限でのギャップ。
 
 ## ディレクトリ構成
 ```
 .
 ├── src/
-│   ├── generate_input.py    # Generate HPhi input files
-│   ├── run_calculations.py  # Execute HPhi calculations
-│   └── analyze_results.py   # Analyze energy gaps
-├── tests/                   # Test files
-├── data/                    # Input data directory (created by generate_input.py)
-└── results/                 # Results directory
-    └── raw/                # Raw calculation results
+│   ├── generate_input.py    # HPhi入力ファイル生成
+│   ├── run_calculations.py  # HPhi計算実行
+│   └── analyze_results.py   # エネルギーギャップ解析
+├── tests/                   # テストファイル
+├── data/                    # 入力データディレクトリ（generate_input.pyにより作成）
+└── results/                 # 結果ディレクトリ
+    └── raw/                # 生の計算結果
 ```
 
-## Prerequisites
-- Python 3.8 or later
-- Required Python packages:
+## 実行に必要な準備
+- Python 3.8以降
+- 必要なPythonパッケージ：
   ```
   numpy>=1.24.0
   matplotlib>=3.7.0
-  pytest>=7.3.1  # for running tests
+  pytest>=7.3.1  # テスト実行用
   ```
-- HPhi (compiled and accessible in PATH)
+- HPhi（コンパイル済みでPATHが通っていること）
 
-## Usage
+## 実行手順
 
-### 1. Generate Input Files
+### 1. 入力ファイルの生成
 ```bash
-python src/generate_input.py [options]
-  --work-dir DIR    Working directory (default: current directory)
-  --2S VALUE        Value of 2S (default: 1)
-  --delta VALUE     Value of Δ (default: 1.0)
-  --sizes LIST      Comma-separated list of system sizes (default: 4,6,8,10,12)
+python src/generate_input.py [オプション]
+  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
+  --2S VALUE        2Sの値（デフォルト：1）
+  --delta VALUE     Δの値（デフォルト：1.0）
+  --sizes LIST      システムサイズのカンマ区切りリスト（デフォルト：4,6,8,10,12）
 ```
 
-### 2. Run Calculations
+### 2. 計算の実行
 ```bash
-python src/run_calculations.py [options]
-  --work-dir DIR    Working directory (default: current directory)
+python src/run_calculations.py [オプション]
+  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
 ```
 
-### 3. Analyze Results
+### 3. 結果の解析
 ```bash
-python src/analyze_results.py [options]
-  --work-dir DIR    Working directory (default: current directory)
-  --format FORMAT   Output format for plots: pdf, png, or pdf,png (default: pdf)
+python src/analyze_results.py [オプション]
+  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
+  --format FORMAT   プロット出力形式：pdf、png、または pdf,png（デフォルト：pdf）
 ```
 
 ---
