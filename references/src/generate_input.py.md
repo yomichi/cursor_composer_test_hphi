@@ -23,16 +23,13 @@ method = "CG"
 lattice = "chain lattice"
 L = {size}
 2S = {2s}
-J = 1.0
-2Sz = 0
-nelec = {nelec}
-Lanczos_max = 2000
-CDataFileHead = "zvo"
-Sz = 0
-NSPGaussVec = 1
-NOmega = 5
-CG_maxIter = 2000
-CG_eps = 1e-10
+h = 0.0
+Jx = 1.0
+Jy = 1.0
+Jz = {delta}
+NOmega = 2
+CG_maxIter = 1000
+CG_eps = 1e-12
 ```
 
 ## 出力ディレクトリ構造
