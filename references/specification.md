@@ -36,29 +36,19 @@
 ## ファイル構成
 ```
 project/
-├── src/
-│   ├── generate_input.py  # 入力ファイル生成スクリプト
-│   ├── run_calculations.py # 計算実行スクリプト
-│   └── analyze_results.py  # 結果解析・プロットスクリプト
-└── work/                  # 作業ディレクトリ（任意の場所に配置可能）
-    ├── data/
-    │   ├── N4/
-    │   ├── N6/
-    │   ├── N8/
-    │   └── ...
-    └── results/
-        ├── raw/      # 生の計算結果
-        └── figures/  # プロット画像
+└── src/
+    ├── generate_input.py   # 入力ファイル生成スクリプト
+    ├── run_calculations.py # 計算実行スクリプト
+    └── analyze_results.py  # 結果解析・プロットスクリプト
 ```
 
 ### 作業ディレクトリの設定
-- スクリプトは作業ディレクトリのパスを引数として受け取る
-- デフォルトでは `project/work` を使用
-- 環境変数 `WORK_DIR` での指定も可能
+- スクリプトは `--work-dir` オプションで作業ディレクトリを指定可能
+- デフォルトではカレントディレクトリを使用
 - 作業ディレクトリ内に必要なサブディレクトリを自動生成
-  ```python
-  # ディレクトリ構造の例
-  WORK_DIR/
+  ```
+  # ディレクトリ構造の例（work-dir="./work"の場合）
+  work/
   ├── data/
   │   └── N{size}/
   │       ├── StdFace.def
@@ -70,6 +60,15 @@ project/
       └── figures/
           └── gap_size_dependence.pdf
   ```
+
+### スクリプトの使用例
+```bash
+# カレントディレクトリを作業ディレクトリとして使用
+python src/generate_input.py
+
+# 特定のディレクトリを作業ディレクトリとして指定
+python src/generate_input.py --work-dir ./work
+```
 
 ## 注意点
 1. メモリ使用量の考慮
