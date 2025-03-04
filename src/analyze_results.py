@@ -225,7 +225,7 @@ def create_plot(output_file, sizes, gaps):
     plt.xlim(-0.01, max(x) * 1.1)
     
     # Save plot in specified formats
-    for fmt in plt.rcParams['savefig.format']:
+    for fmt in args.formats:
         plt.savefig(f"{output_file}.{fmt}")
     plt.close()
 
@@ -237,11 +237,9 @@ def main(argv=None):
     argv : list, optional
         Command line arguments, by default None
     """
+    global args
     args = parse_args(argv)
     work_dir = Path(args.work_dir)
-
-    # Set plot formats
-    plt.rcParams['savefig.format'] = args.formats
 
     # Find result directories and extract system sizes
     result_dirs = find_result_dirs(work_dir)

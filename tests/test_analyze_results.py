@@ -3,6 +3,8 @@ import os
 import tempfile
 from pathlib import Path
 import numpy as np
+import matplotlib.pyplot as plt
+import analyze_results
 from analyze_results import (
     parse_args,
     find_result_dirs,
@@ -12,7 +14,6 @@ from analyze_results import (
     create_plot,
     main
 )
-import matplotlib.pyplot as plt
 
 @pytest.fixture
 def sample_energy_data():
@@ -31,6 +32,16 @@ State 1
 def temp_workdir():
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
+
+@pytest.fixture(autouse=True)
+def setup_and_cleanup():
+    # Setup: ensure args is initialized
+    if not hasattr(analyze_results, 'args'):
+        analyze_results.args = parse_args([])
+    yield
+    # Cleanup: reset args
+    if hasattr(analyze_results, 'args'):
+        delattr(analyze_results, 'args')
 
 def test_parse_args(temp_workdir):
     # Test default values
@@ -148,20 +159,20 @@ def test_write_gap_data(temp_workdir):
 def test_create_plot(temp_workdir):
     sizes = [4, 6, 8]
     gaps = [0.11671327, 0.13580246, 0.13580246]
-    
-    # Test PDF output (default)
     plot_file = temp_workdir / "energy_gap"
-    plt.rcParams['savefig.format'] = ['pdf']
+
+    # Test PDF output (default)
+    analyze_results.args = parse_args(["--format", "pdf"])
     create_plot(plot_file, sizes, gaps)
     assert (plot_file.with_suffix('.pdf')).exists()
     
     # Test PNG output
-    plt.rcParams['savefig.format'] = ['png']
+    analyze_results.args = parse_args(["--format", "png"])
     create_plot(plot_file, sizes, gaps)
     assert (plot_file.with_suffix('.png')).exists()
     
     # Test multiple formats
-    plt.rcParams['savefig.format'] = ['pdf', 'png']
+    analyze_results.args = parse_args(["--format", "pdf,png"])
     create_plot(plot_file, sizes, gaps)
     assert (plot_file.with_suffix('.pdf')).exists()
     assert (plot_file.with_suffix('.png')).exists()
