@@ -181,6 +181,9 @@ class TestWriteInputFiles:
     def test_file_creation(self, temp_work_dir):
         """Test creation of input files."""
         sizes = [4, 6]
+        # Create directory structure first
+        generate_input.setup_directories(temp_work_dir, sizes)
+        # Then write files
         generate_input.write_input_files(temp_work_dir, sizes, 1, 1.0)
 
         for size in sizes:
@@ -191,6 +194,9 @@ class TestWriteInputFiles:
     def test_file_content(self, temp_work_dir):
         """Test content of created files."""
         sizes = [4]
+        # Create directory structure first
+        generate_input.setup_directories(temp_work_dir, sizes)
+        # Then write files
         generate_input.write_input_files(temp_work_dir, sizes, 1, 1.0)
 
         stdface_path = temp_work_dir / "data" / "N4" / "StdFace.def"
