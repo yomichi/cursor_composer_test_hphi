@@ -27,9 +27,7 @@ h = 0.0
 Jx = 1.0
 Jy = 1.0
 Jz = {delta}
-NOmega = 2
-CG_maxIter = 1000
-CG_eps = 1e-12
+exct = 2
 ```
 
 ## 出力ディレクトリ構造

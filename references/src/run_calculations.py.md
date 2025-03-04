@@ -27,13 +27,11 @@ HPhiを用いて各サイズの計算を実行するスクリプト
 ├── data/
 │   └── N{size}/
 │       ├── StdFace.def
-│       ├── hamiltonian.def
 │       └── output/
 └── results/
     └── raw/
         └── N{size}/
-            ├── zvo_energy.dat
-            └── zvo_phys_Sz.dat
+            └── zvo_energy.dat  # 基底状態と第一励起状態のエネルギー
 ```
 
 ## エラー処理
