@@ -3,7 +3,7 @@
 反強磁性XXZ模型の入力ファイルを生成するスクリプト
 
 ## 機能
-- 指定されたサイズのスピン鎖に対するHPhiの入力ファイルを生成
+- 指定されたサイズのスピン鎖に対するHPhiの入力ファイルを生成（スタンダードモード用）
 - 各サイズごとに専用のディレクトリを作成
 - `StdFace.def`と`hamiltonian.def`を生成
 
@@ -19,13 +19,14 @@
 
 ### StdFace.def
 ```
-model = "SpinGC"
-method = "Lanczos"
+model = "SpinGC"      # SpinGCモデル（一般化スピン）
+method = "CG"         # 共役勾配法
 lattice = "chain lattice"
 L = {size}
 2S = {2s}
 J = 1.0
-2Sz = 0
+2Sz = 0              # 全スピンのz成分
+nelec = {nelec}      # 粒子数（2S*L/2に設定）
 ```
 
 ### hamiltonian.def

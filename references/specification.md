@@ -28,29 +28,6 @@ $$H = J \sum_i \left[ S_{i}^x S_{i+1}^x + S_{i}^y S_{i+1}^y + \Delta S_{i}^zS_{i
     - Z項の係数：J * Δ
   - サイズごとに別のディレクトリを作成
 
-### スクリプトのオプション
-```
-共通オプション：
-  --work-dir DIR    作業ディレクトリ（デフォルト：カレントディレクトリ）
-  --2s INTEGER      スピンの大きさ2S（必須）
-  --delta FLOAT     イジング異方性Δ（必須）
-
-generate_input.py の追加オプション：
-  --sizes LIST      計算するシステムサイズのリスト（デフォルト：[4,6,8,10,12]）
-```
-
-### スクリプトの使用例
-```bash
-# S=1/2, Δ=1.0（Heisenberg模型）の場合
-python src/generate_input.py --2s 1 --delta 1.0
-
-# S=1, Δ=0（XY模型）の場合、作業ディレクトリを指定
-python src/generate_input.py --2s 2 --delta 0.0 --work-dir ./work
-
-# カスタムサイズを指定
-python src/generate_input.py --2s 1 --delta 1.0 --sizes 4,6,8
-```
-
 ### 2. 計算の実行
 - 各サイズに対してHPhiを実行
   - `HPhi -s StdFace.def`でスタンダードモードで実行
