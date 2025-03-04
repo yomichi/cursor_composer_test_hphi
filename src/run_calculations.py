@@ -101,6 +101,9 @@ def run_hphi(calc_dir: Path, hphi: str) -> int:
             text=True
         )
         return result.returncode
+    except subprocess.CalledProcessError as e:
+        print(f"HPhi execution failed: {e}", file=sys.stderr)
+        raise
     finally:
         os.chdir(current_dir)
 
@@ -149,9 +152,16 @@ def main():
         # Run calculations and move results
         for calc_dir in calc_dirs:
             print(f"Running calculation in {calc_dir}")
-            run_hphi(calc_dir, args.hphi)
-            move_results(work_dir, calc_dir)
-            print(f"Finished calculation in {calc_dir}")
+            try:
+                run_hphi(calc_dir, args.hphi)
+                move_results(work_dir, calc_dir)
+                print(f"Finished calculation in {calc_dir}")
+            except subprocess.CalledProcessError:
+                print("Error: Command failed", file=sys.stderr)
+                sys.exit(1)
+            except FileNotFoundError as e:
+                print(f"Error: {e}", file=sys.stderr)
+                sys.exit(1)
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

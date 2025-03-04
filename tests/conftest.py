@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 import pytest
+import subprocess
 
 # Add src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -30,8 +31,18 @@ def mock_hphi_success(mocker):
     MagicMock
         Mocked subprocess.run function
     """
-    mock_run = mocker.patch("subprocess.run")
-    mock_run.return_value.returncode = 0
+    def run_success(*args, **kwargs):
+        # Create output directory and dummy file
+        calc_dir = Path.cwd()
+        output_dir = calc_dir / "output"
+        output_dir.mkdir(exist_ok=True)
+        (output_dir / "zvo_energy.dat").write_text("dummy energy data")
+        
+        result = mocker.MagicMock()
+        result.returncode = 0
+        return result
+
+    mock_run = mocker.patch("subprocess.run", side_effect=run_success)
     return mock_run
 
 
@@ -44,8 +55,14 @@ def mock_hphi_failure(mocker):
     MagicMock
         Mocked subprocess.run function
     """
-    mock_run = mocker.patch("subprocess.run")
-    mock_run.return_value.returncode = 1
+    def run_failure(*args, **kwargs):
+        if kwargs.get("check", False):
+            raise subprocess.CalledProcessError(1, args[0])
+        result = mocker.MagicMock()
+        result.returncode = 1
+        return result
+
+    mock_run = mocker.patch("subprocess.run", side_effect=run_failure)
     return mock_run
 
 
