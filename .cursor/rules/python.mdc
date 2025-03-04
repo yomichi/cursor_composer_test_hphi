@@ -1,0 +1,11 @@
+---
+description: python codes
+globs: *.py
+alwaysApply: false
+---
+
+# Your rule content
+
+- 文字列には英語を使う
+- コメントには英語を使う
+- docstringsはNumpy形式にする
