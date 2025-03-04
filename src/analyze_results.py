@@ -152,13 +152,23 @@ def write_gap_data(output_file, sizes, e0s, e1s, gaps):
     gaps : list
         List of energy gaps
     """
+    # Calculate extrapolation
+    x = [1/n for n in sizes]
+    fit = np.polyfit(x, gaps, 1)
+    gap_infinity = np.poly1d(fit)(0)
+    
     with open(output_file, 'w') as f:
-        f.write("# N      E0          E1          Gap\n")
+        f.write("# N      E0          E1          Gap         1/N\n")
         for n, e0, e1, gap in zip(sizes, e0s, e1s, gaps):
-            f.write(f"{n:3d}     {e0:.8f} {e1:.8f}  {gap:.8f}\n")
+            f.write(f"{n:3d}     {e0:.8f} {e1:.8f}  {gap:.8f}  {1/n:.8f}\n")
+        f.write("#\n")
+        f.write("# Linear fit: gap = ax + b\n")
+        f.write(f"# a = {fit[0]:.8f}\n")
+        f.write(f"# b = {fit[1]:.8f}\n")
+        f.write(f"# Gap(N→∞) = {gap_infinity:.8f}\n")
 
 def create_plot(output_file, sizes, gaps):
-    """Create energy gap plot.
+    """Create energy gap plot with 1/N extrapolation.
 
     Parameters
     ----------
@@ -169,12 +179,39 @@ def create_plot(output_file, sizes, gaps):
     gaps : list
         List of energy gaps
     """
+    # Convert sizes to 1/N
+    x = [1/n for n in sizes]
+    y = gaps
+
+    # Linear fit for extrapolation
+    fit = np.polyfit(x, y, 1)
+    fit_fn = np.poly1d(fit)
+    
+    # Create extrapolation point at 1/N = 0
+    x_extrap = np.array([0])
+    y_extrap = fit_fn(x_extrap)
+
+    # Create plot
     plt.figure(figsize=(8, 6))
-    plt.plot(sizes, gaps, 'o-', label='Energy gap')
-    plt.xlabel('System size N')
+    
+    # Plot data points
+    plt.plot(x, y, 'o', label='Data')
+    
+    # Plot fitting line
+    x_fit = np.linspace(0, max(x), 100)
+    plt.plot(x_fit, fit_fn(x_fit), '--', label=f'Fit: {fit[0]:.4f}x + {fit[1]:.4f}')
+    
+    # Plot extrapolation point
+    plt.plot(x_extrap, y_extrap, 'r*', label=f'N→∞: {y_extrap[0]:.4f}', markersize=10)
+    
+    plt.xlabel('1/N')
     plt.ylabel('Energy gap')
     plt.grid(True)
     plt.legend()
+    
+    # Adjust x-axis to show the origin
+    plt.xlim(-0.01, max(x) * 1.1)
+    
     plt.savefig(output_file)
     plt.close()
 

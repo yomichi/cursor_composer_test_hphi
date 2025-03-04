@@ -115,10 +115,17 @@ def test_write_gap_data(temp_workdir):
     
     assert output_file.exists()
     content = output_file.read_text()
+    
+    # Check header and data format
     assert "# N" in content
     assert "E0" in content
     assert "E1" in content
     assert "Gap" in content
+    assert "1/N" in content
+    
+    # Check extrapolation information
+    assert "Linear fit:" in content
+    assert "Gap(N→∞)" in content
 
 def test_create_plot(temp_workdir):
     sizes = [4, 6, 8]
