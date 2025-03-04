@@ -31,14 +31,14 @@ def temp_workdir():
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
 
-def test_parse_args():
+def test_parse_args(temp_workdir):
     # Test default values
     args = parse_args([])
     assert args.work_dir == "."
 
     # Test custom work directory
-    args = parse_args(["--work-dir", "/path/to/work"])
-    assert args.work_dir == "/path/to/work"
+    args = parse_args(["--work-dir", str(temp_workdir)])
+    assert args.work_dir == str(temp_workdir)
 
     # Test non-existent directory
     with pytest.raises(SystemExit):
@@ -136,6 +136,7 @@ def test_main(temp_workdir, sample_energy_data):
         result_dir = temp_workdir / f"results/raw/N{n}"
         result_dir.mkdir(parents=True)
         energy_file = result_dir / "zvo_energy.dat"
+        energy_file.parent.mkdir(parents=True, exist_ok=True)
         energy_file.write_text(sample_energy_data)
     
     main([str(temp_workdir)])

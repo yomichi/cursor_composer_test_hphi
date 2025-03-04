@@ -25,7 +25,7 @@ def parse_args(args=None):
         If the specified work directory does not exist
     """
     parser = argparse.ArgumentParser(description='Analyze HPhi energy results')
-    parser.add_argument('--work-dir', default='.',
+    parser.add_argument('work_dir', nargs='?', default='.',
                        help='Working directory containing results')
     
     parsed_args = parser.parse_args(args)
@@ -87,23 +87,15 @@ def read_energies(energy_file):
         raise FileNotFoundError(f"Energy file not found: {energy_file}")
 
     content = energy_file.read_text()
-    energies = {}
     
     # Parse state blocks
-    state_blocks = re.split(r'\nState \d+\n', content)
-    for block in state_blocks:
-        if not block.strip():
-            continue
-            
-        # Extract state number and energy
-        energy_match = re.search(r'Energy\s+([+-]?\d+\.\d+)', block)
-        state_match = re.search(r'State (\d+)', block)
-        
-        if not energy_match or not state_match:
-            continue
-            
-        state = int(state_match.group(1))
-        energy = float(energy_match.group(1))
+    state_pattern = r'State (\d+)\n(?:.*\n)*?  Energy\s+([+-]?\d+\.\d+)'
+    matches = re.finditer(state_pattern, content)
+    
+    energies = {}
+    for match in matches:
+        state = int(match.group(1))
+        energy = float(match.group(2))
         energies[state] = energy
 
     if 0 not in energies or 1 not in energies:
